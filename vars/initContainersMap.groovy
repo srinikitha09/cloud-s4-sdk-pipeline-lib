@@ -7,7 +7,6 @@ def call(Map parameters = [:]) {
         def script = parameters.script
 
         script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script: script)
-        echo "And the global value is ${script.commonPipelineEnvironment.configuration.k8sMapping}"
     }
 }
 

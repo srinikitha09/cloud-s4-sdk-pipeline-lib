@@ -41,10 +41,8 @@ def call(Map parameters = [:], body) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        echo "${containers.size()} is the size and ${containers} and ${stageName} ${script?.commonPipelineEnvironment?.configuration?.k8sMapping}"
         if (env.jaas_owner && containers.size() > 1) {
             withEnv(["S4SDK_STAGE_NAME=${stageName}"]) {
-                echo "Inside POD ${stageName} and ${containers}"
                 podTemplate(options) {
                     node(mergedStageConfiguration.uniqueId) {
                         unstashFiles script: script, stage: stageName
@@ -55,7 +53,6 @@ def call(Map parameters = [:], body) {
                 }
             }
         } else {
-            echo "Heading to Piper"
             node(nodeLabel) {
                 try {
                     unstashFiles script: script, stage: stageName
@@ -89,7 +86,6 @@ private getContainerList(script, config, stageName) {
        return [:]
     }
     Map containers = containerConfig[stageName]
-    echo "containers are ${containers}"
     envVars = getContainerEnvs()
     result = []
     result.push(containerTemplate(name: 'jnlp',
