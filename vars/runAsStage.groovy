@@ -53,6 +53,7 @@ def call(Map parameters = [:], body) {
                 }
             }
         } else {
+            echo "Heading to Piper"
             node(nodeLabel) {
                 try {
                     unstashFiles script: script, stage: stageName
