@@ -30,6 +30,7 @@ Map getContainers(script) {
 
     ]
     stageToStepMapping.each { k, v -> containers[k] = getContainersList(script, v) }
+    echo "Containers are ${containers}"
     return containers
 }
 
@@ -48,5 +49,6 @@ def updateContainerForStep(script, String stepName) {
     Set parameterKeys = ['dockerImage']
 
     def configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
+    echo "Here it is ${(configuration.dockerImage).toString()} ${stepName}"
     return (configuration.dockerImage).toString()
 }
