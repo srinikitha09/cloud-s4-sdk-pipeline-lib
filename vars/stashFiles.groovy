@@ -21,6 +21,8 @@ def call(Map parameters = [:]) {
                 steps.stash name: name, includes: include, exclude: exclude, allowEmpty: true
             }
         }
-        deleteDir()
+        if (!env.S4SDK_STAGE_NAME) {
+            deleteDir()
+        }
     }
 }
