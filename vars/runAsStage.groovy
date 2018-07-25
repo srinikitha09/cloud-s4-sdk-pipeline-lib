@@ -84,7 +84,8 @@ private executeStage(Closure originalStage, String stageName, Map stageConfigura
 private getContainerList(script, def config, String stageName) {
     def envVars
     def jnlpAgent = ConfigurationLoader.generalConfiguration(script).jnlpAgent ?: 's4sdk/jenkins-agent-k8s:latest'
-    Map containers = (script?.commonPipelineEnvironment?.configuration?.k8sMapping?.stageName) ?: [:]
+    Map containers = (script?.commonPipelineEnvironment?.configuration?.k8sMapping[stageName]) ?: [:]
+    echo "containers are ${containers}"
     envVars = getContainerEnvs()
     result = []
     result.push(containerTemplate(name: 'jnlp',
