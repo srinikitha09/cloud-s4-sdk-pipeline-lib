@@ -49,5 +49,6 @@ def updateContainerForStep(script, String stepName) {
     Set parameterKeys = ['dockerImage']
 
     def configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
+    echo "Configuration is ${configuration} stepName ${stepName}"
     return (configuration.dockerImage).toString()
 }
