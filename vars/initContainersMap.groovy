@@ -5,8 +5,9 @@ import com.sap.piper.ConfigurationMerger
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
-        echo "${script.commonPipelineEnvironment}"
+
         script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script: script)
+        echo "And the global value is ${script.commonPipelineEnvironment.configuration.k8sMapping}"
     }
 }
 
@@ -30,7 +31,6 @@ Map getContainers(script) {
 
     ]
     stageToStepMapping.each { k, v -> containers[k] = getContainersList(script, v) }
-    echo "Containers are ${containers}"
     return containers
 }
 
@@ -50,6 +50,5 @@ def updateContainerForStep(script, String stepName) {
     Set parameterKeys = ['dockerImage']
 
     def configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
-    echo "Here it is ${(configuration.dockerImage).toString()} ${stepName}"
     return (configuration.dockerImage).toString()
 }
