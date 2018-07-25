@@ -42,7 +42,7 @@ def call(Map parameters = [:], body) {
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
         echo "${containers.size()} is the size"
-        if (env.jaas_owner && containers.size() != 0) {
+        if (env.jaas_owner && containers.size() > 1) {
             withEnv(["S4SDK_STAGE_NAME=${stageName}"]) {
                 echo "Inside POD ${stageName} and ${containers}"
                 podTemplate(options) {
