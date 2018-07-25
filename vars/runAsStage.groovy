@@ -31,16 +31,17 @@ def call(Map parameters = [:], body) {
         stageDefaultConfiguration
     )
     mergedStageConfiguration.uniqueId = UUID.randomUUID().toString()
+    def containers = getContainerList(script, mergedStageConfiguration, stageName)
     String nodeLabel = generalConfiguration.defaultNode
     def options = [name      : 'dynamic-agent-' + mergedStageConfiguration.uniqueId,
                    label     : mergedStageConfiguration.uniqueId,
-                   containers: getContainerList(script, mergedStageConfiguration, stageName)]
+                   containers: containers]
 
     if (mergedStageConfiguration.node) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        if (env.jaas_owner) {
+        if (env.jaas_owner && containers.size() != 0) {
             withEnv(["S4SDK_STAGE_NAME=${stageName}"]) {
                 podTemplate(options) {
                     node(mergedStageConfiguration.uniqueId) {
