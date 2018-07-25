@@ -33,14 +33,15 @@ def call(Map parameters = [:], body) {
     mergedStageConfiguration.uniqueId = UUID.randomUUID().toString()
     def containers = getContainerList(script, mergedStageConfiguration, stageName)
     String nodeLabel = generalConfiguration.defaultNode
-    def options = [name      : 'dynamic-agent-' + mergedStageConfiguration.uniqueId,
-                   label     : mergedStageConfiguration.uniqueId,
-                   containers: containers]
+
 
     if (mergedStageConfiguration.node) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
+        def options = [name      : 'dynamic-agent-' + mergedStageConfiguration.uniqueId,
+                       label     : mergedStageConfiguration.uniqueId,
+                       containers: containers]
         if (env.jaas_owner && containers.size() > 1) {
             withEnv(["S4SDK_STAGE_NAME=${stageName}"]) {
                 podTemplate(options) {
@@ -86,6 +87,7 @@ private getContainerList(script, config, stageName) {
        return [:]
     }
     Map containers = containerConfig[stageName]
+
     envVars = getContainerEnvs()
     result = []
     result.push(containerTemplate(name: 'jnlp',
