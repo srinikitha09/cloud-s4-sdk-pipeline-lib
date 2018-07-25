@@ -37,7 +37,8 @@ Map getContainers(script) {
 @NonCPS
 def getContainersList(script, Map stepsMap) {
     def containers = [:]
-    return stepsMap.each { k, v -> containers[updateContainerForStep(script, v)] = k.toString().toLowerCase() }
+    stepsMap.each { k, v -> containers[updateContainerForStep(script, v)] = k.toString().toLowerCase() }
+    return containers
 }
 
 @NonCPS
