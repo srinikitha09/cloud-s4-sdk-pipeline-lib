@@ -1,12 +1,14 @@
 import com.sap.piper.ConfigurationHelper
 import com.sap.piper.ConfigurationLoader
 import com.sap.piper.ConfigurationMerger
+import com.sap.piper.SysEnv
+
+import java.util.UUID
 
 def call(Map parameters = [:], body) {
     ConfigurationHelper configurationHelper = new ConfigurationHelper(parameters)
     def stageName = configurationHelper.getMandatoryProperty('stageName')
     def script = configurationHelper.getMandatoryProperty('script')
-
     Map defaultGeneralConfiguration = ConfigurationLoader.defaultGeneralConfiguration(script)
     Map projectGeneralConfiguration = ConfigurationLoader.generalConfiguration(script)
 
@@ -19,6 +21,7 @@ def call(Map parameters = [:], body) {
     Map stageDefaultConfiguration = ConfigurationLoader.defaultStageConfiguration(script, stageName)
     Map stageConfiguration = ConfigurationLoader.stageConfiguration(script, stageName)
 
+
     Set parameterKeys = ['node']
     Map mergedStageConfiguration = ConfigurationMerger.merge(
         parameters,
@@ -27,23 +30,35 @@ def call(Map parameters = [:], body) {
         stageConfiguration.keySet(),
         stageDefaultConfiguration
     )
-
-    def nodeLabel = generalConfiguration.defaultNode
+    mergedStageConfiguration.uniqueId = UUID.randomUUID().toString()
+    String nodeLabel = generalConfiguration.defaultNode
+    def options = [name      : 'dynamic-agent-' + mergedStageConfiguration.uniqueId,
+                   label     : mergedStageConfiguration.uniqueId,
+                   containers: getContainerList(script, mergedStageConfiguration, stageName)]
 
     if (mergedStageConfiguration.node) {
         nodeLabel = mergedStageConfiguration.node
     }
-
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        node(nodeLabel) {
-            try {
-                unstashFiles script: script, stage: stageName
-                executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
-                stashFiles script: script, stage: stageName
-                echo "Current build result in stage $stageName is ${script.currentBuild.result}."
+        if (env.jaas_owner) {
+            podTemplate(options) {
+                node(mergedStageConfiguration.uniqueId) {
+                    unstashFiles script: script, stage: stageName
+                    executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
+                    stashFiles script: script, stage: stageName
+                    echo "Current build result in stage $stageName is ${script.currentBuild.result}."
+                }
             }
-            finally {
-                deleteDir()
+        } else {
+            node(nodeLabel) {
+                try {
+                    unstashFiles script: script, stage: stageName
+                    executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
+                    stashFiles script: script, stage: stageName
+                    echo "Current build result in stage $stageName is ${script.currentBuild.result}."
+                } finally {
+                    deleteDir()
+                }
             }
         }
     }
@@ -59,3 +74,40 @@ private executeStage(Closure originalStage, String stageName, Map stageConfigura
         originalStage()
     }
 }
+
+private getContainerList(script, def config, String stageName) {
+    def envVars
+    def jnlpAgent = ConfigurationLoader.generalConfiguration(script).jnlpAgent ?: 's4sdk/jenkins-agent-k8s:latest'
+    Map containers = script.k8sMapping.stageName ?: [:]
+    envVars = getContainerEnvs()
+    result = []
+    result.push(containerTemplate(name: 'jnlp',
+        image: jnlpAgent,
+        args: '${computer.jnlpmac} ${computer.name}'))
+
+    containers.each { k, v ->
+        result.push(containerTemplate(name: v,
+            image: k,
+            alwaysPullImage: true,
+            command: '/usr/bin/tail -f /dev/null',
+            envVars: envVars))
+    }
+    return result
+}
+
+private getContainerEnvs() {
+    def containerEnv = []
+
+    // Inherit the proxy information from the master to the container
+    def systemEnv = new SysEnv()
+    def envList = systemEnv.getEnv().keySet()
+    for (String env : envList) {
+        containerEnv << envVar(key: env, value: systemEnv.get(env))
+    }
+
+    // ContainerEnv array can't be empty. Using a stub to avoid failure.
+    if (!containerEnv) containerEnv << envVar(key: "EMPTY_VAR", value: " ")
+
+    return containerEnv
+}
+

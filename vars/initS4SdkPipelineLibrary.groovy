@@ -15,5 +15,7 @@ def call(Map parameters) {
         convertLegacyConfiguration script: script
 
         setupDownloadCache script: script
+
+        initContainersMap script: script
     }
 }
