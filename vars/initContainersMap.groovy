@@ -3,7 +3,7 @@ import com.cloudbees.groovy.cps.NonCPS
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
-        script.k8sMapping = getContainers(script: script)
+        script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script: script)
     }
 }
 

@@ -41,12 +41,14 @@ def call(Map parameters = [:], body) {
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
         if (env.jaas_owner) {
-            podTemplate(options) {
-                node(mergedStageConfiguration.uniqueId) {
-                    unstashFiles script: script, stage: stageName
-                    executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
-                    stashFiles script: script, stage: stageName
-                    echo "Current build result in stage $stageName is ${script.currentBuild.result}."
+            withEnv(["S4SDK_STAGE_NAME=${stageName}"]) {
+                podTemplate(options) {
+                    node(mergedStageConfiguration.uniqueId) {
+                        unstashFiles script: script, stage: stageName
+                        executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
+                        stashFiles script: script, stage: stageName
+                        echo "Current build result in stage $stageName is ${script.currentBuild.result}."
+                    }
                 }
             }
         } else {
@@ -78,7 +80,7 @@ private executeStage(Closure originalStage, String stageName, Map stageConfigura
 private getContainerList(script, def config, String stageName) {
     def envVars
     def jnlpAgent = ConfigurationLoader.generalConfiguration(script).jnlpAgent ?: 's4sdk/jenkins-agent-k8s:latest'
-    Map containers = script.k8sMapping.stageName ?: [:]
+    Map containers = script.commonPipelineEnvironment.configuration.k8sMapping.stageName ?: [:]
     envVars = getContainerEnvs()
     result = []
     result.push(containerTemplate(name: 'jnlp',
