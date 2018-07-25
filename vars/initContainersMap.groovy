@@ -41,14 +41,17 @@ def getContainersList(script, Map stepsMap) {
 }
 
 @NonCPS
-def updateContainerForStep(script, String stepName) {
+def updateContainerForStep(script, stepName) {
     def parameters = [:]
     final Map stepDefaults = ConfigurationLoader.defaultStepConfiguration(script, stepName)
-    final Map stepConfiguration = ConfigurationLoader.stepConfiguration(script, stepName)
-    Set stepConfigurationKeys = ['dockerImage']
-    Set parameterKeys = ['dockerImage']
 
-    def configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
-    echo "Configuration is ${configuration} stepName ${stepName}"
+    final Map stepConfiguration = ConfigurationLoader.stepConfiguration(script, stepName)
+
+    Set parameterKeys = ['dockerImage']
+    Set stepConfigurationKeys = ['dockerImage']
+
+    Map configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
+
+    echo "Configuration is ${configuration} stepName ${stepName} echo ${stepDefaults} and ${stepConfiguration}"
     return (configuration.dockerImage).toString()
 }
