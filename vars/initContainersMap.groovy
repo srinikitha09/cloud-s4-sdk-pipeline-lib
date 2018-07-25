@@ -27,12 +27,12 @@ Map getContainers(script) {
                               'productionDeployment': ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm', 'deployToCfWithCli': 'deployToCfWithCli', 'deployToNeoWithCli': 'deployToNeoWithCli']
 
     ]
-    stageToStepMapping.each { k, v -> containers[k] = getContainersList(v) }
+    stageToStepMapping.each { k, v -> containers[k] = getContainersList(script, v) }
     return containers
 }
 
 @NonCPS
-def getContainersList(Map stepsMap) {
+def getContainersList(script, Map stepsMap) {
     def containers = [:]
     return stepsMap.each { k, v -> containers[updateContainerForStep(script, v)] = k.toString().toLowerCase() }
 }
