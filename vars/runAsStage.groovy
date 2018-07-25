@@ -41,7 +41,7 @@ def call(Map parameters = [:], body) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        echo "${containers.size()} is the size"
+        echo "${containers.size()} is the size and ${containers} and ${stageName} ${script?.commonPipelineEnvironment?.configuration?.k8sMapping}"
         if (env.jaas_owner && containers.size() > 1) {
             withEnv(["S4SDK_STAGE_NAME=${stageName}"]) {
                 echo "Inside POD ${stageName} and ${containers}"
