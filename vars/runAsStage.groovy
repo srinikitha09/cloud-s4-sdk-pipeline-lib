@@ -38,7 +38,7 @@ def call(Map parameters = [:], body) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        if (env.jaas_owner && containersMap.size() > 1) {
+        if (env.jaas_owner && containersMap.size() > 0) {
             withEnv(["POD_NAME=${stageName}"]) {
                 runAsPod(script: script, containersMap: containersMap) {
                         unstashFiles script: script, stage: stageName
