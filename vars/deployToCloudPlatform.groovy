@@ -16,6 +16,7 @@ def call(Map parameters = [:]) {
                     }
                 }
                 index++
+                echo "Increment index"
             }
             runClosures deployments, script
         } else if (parameters.neoTargets) {
