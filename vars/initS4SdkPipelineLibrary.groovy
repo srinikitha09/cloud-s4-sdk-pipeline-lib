@@ -12,10 +12,15 @@ def call(Map parameters) {
         setupCommonPipelineEnvironment(parameters)
 
         echo "Values are ${ConfigurationLoader.stepConfiguration(script, 'executeNpm')}"
+        initContainersMap script:script
 
         loadS4sdkDefaultValues script: script
 
+        echo "Values are ${ConfigurationLoader.stepConfiguration(script, 'executeNpm')}"
+
         convertLegacyConfiguration script: script
+
+        echo "Values are ${ConfigurationLoader.stepConfiguration(script, 'executeNpm')}"
 
         setupDownloadCache script: script
 
