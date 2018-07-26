@@ -45,13 +45,13 @@ def updateContainerForStep(script, stepName) {
     def parameters = [:]
     final Map stepDefaults = ConfigurationLoader.defaultStepConfiguration(script, stepName)
 
-    final Map configuration = ConfigurationLoader.stepConfiguration(script, stepName)
+    final Map stepConfiguration = ConfigurationLoader.stepConfiguration(script, stepName)
 
     Set parameterKeys = ['dockerImage']
     Set stepConfigurationKeys = ['dockerImage']
 
-    //Map configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
+    Map configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
 
-    echo "Configuration is ${configuration} stepName ${stepName} echo ${stepDefaults}"// and ${stepConfiguration}"
+    echo "Configuration is ${stepConfiguration} stepName ${stepName} configuration ${configuration}"
     return (configuration.dockerImage).toString()
 }
