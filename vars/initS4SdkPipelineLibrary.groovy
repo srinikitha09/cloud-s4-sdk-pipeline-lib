@@ -1,4 +1,7 @@
+import com.cloudbees.groovy.cps.NonCPS
 import com.sap.piper.ConfigurationLoader
+import com.sap.piper.ConfigurationMerger
+
 def call(Map parameters) {
     handleStepErrors(stepName: 'initS4SdkPipelineLibrary', stepParameters: parameters) {
         def script = parameters.script
