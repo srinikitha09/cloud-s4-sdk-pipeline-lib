@@ -6,7 +6,7 @@ def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
 
-        script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script: script)
+        script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script)
     }
 }
 
@@ -52,6 +52,5 @@ def updateContainerForStep(script, stepName) {
 
     Map configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
 
-    echo "Configuration is ${stepConfiguration} stepName ${stepName} configuration ${configuration}"
     return (configuration.dockerImage).toString()
 }
