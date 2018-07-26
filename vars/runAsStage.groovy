@@ -31,17 +31,16 @@ def call(Map parameters = [:], body) {
         stageDefaultConfiguration
     )
     mergedStageConfiguration.uniqueId = UUID.randomUUID().toString()
-    def containersTemplate = getContainerList(script, mergedStageConfiguration, stageName)
     String nodeLabel = generalConfiguration.defaultNode
 
-
+    def containersMap = getContainersMap(script,stageName)
     if (mergedStageConfiguration.node) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        if (env.jaas_owner && containers.size() > 1) {
+        if (env.jaas_owner && containersMap.size() > 1) {
             withEnv(["POD_NAME=${stageName}"]) {
-                runAsPod(script: script, containersMap: getContainersMap) {
+                runAsPod(script: script, containersMap: containersMap) {
                         unstashFiles script: script, stage: stageName
                         executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
                         stashFiles script: script, stage: stageName
