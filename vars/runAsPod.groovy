@@ -4,7 +4,9 @@ import java.util.UUID
 
 def call(Map parameters = [:], body) {
     def uniqueId = UUID.randomUUID().toString()
+
     ConfigurationHelper configurationHelper = new ConfigurationHelper(parameters)
+    def script = configurationHelper.getConfigProperty('script')
     def containersMap = configurationHelper.getConfigProperty('containersMap',[:])
     def dockerEnvVars = configurationHelper.getConfigProperty('dockerEnvVars',[:])
     def dockerWorkspace = configurationHelper.getConfigProperty('dockerWorkspace','')
