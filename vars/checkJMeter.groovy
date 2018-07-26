@@ -26,7 +26,7 @@ def call(Map parameters = [:]) {
         def defaultOptions = "-n -t ${configuration.testPlan} -l JMeter-report.jtl -e -o ${configuration.reportDirectory}"
         def command = "jmeter ${configuration.options?.trim() ?: ''} ${defaultOptions}"
 
-        dockerExecute(dockerImage: configuration.dockerImage) {
+        dockerExecute(script: script, dockerImage: configuration.dockerImage) {
             sh "mkdir -p ${configuration.reportDirectory}"
             sh command
         }
