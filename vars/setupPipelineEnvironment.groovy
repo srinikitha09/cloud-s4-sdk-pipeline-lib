@@ -3,5 +3,4 @@ def call(Map parameters) {
     loadPiper script: parameters.script
     setupCommonPipelineEnvironment(parameters)
     loadS4sdkDefaultValues script: parameters.script
-    initContainersMap script:parameters.script
 }
