@@ -10,13 +10,22 @@ def call(Map parameters = [:]) {
         if (parameters.cfTargets) {
             for (int i = 0; i < parameters.cfTargets.size(); i++) {
                 def target = parameters.cfTargets[i]
-                deployments["Deployment ${index > 1 ? index : ''}"] = {
-                    runAsStage(script: script, stageName: stageName, node: env.NODE_NAME) {
+                if (env.jaas_owner) {
+                    deployments["Deployment ${index > 1 ? index : ''}"] = {
                         deployToCfWithCli script: parameters.script, appName: target.appName, org: target.org, space: target.space, apiEndpoint: target.apiEndpoint, manifest: target.manifest, credentialsId: target.credentialsId, deploymentType: DeploymentType.selectFor(CloudPlatform.CLOUD_FOUNDRY, parameters.isProduction.asBoolean())
                     }
                 }
-                index++
-                echo "Increment index ${index} and ${deployments}"
+            } else {
+                deployments["Deployment ${index > 1 ? index : ''}"] = {
+                    node(env.NODE_NAME) {
+                        unstashFiles script: script, stage: stageName
+                        deployToCfWithCli script: parameters.script, appName: target.appName, org: target.org, space: target.space, apiEndpoint: target.apiEndpoint, manifest: target.manifest, credentialsId: target.credentialsId, deploymentType: DeploymentType.selectFor(CloudPlatform.CLOUD_FOUNDRY, parameters.isProduction.asBoolean())
+                        stashFiles script: script, stage: stageName
+                    }
+                }
+            }
+
+            index++
             }
             runClosures deployments, script
         } else if (parameters.neoTargets) {
@@ -26,8 +35,10 @@ def call(Map parameters = [:]) {
             for (int i = 0; i < parameters.neoTargets.size(); i++) {
                 def target = parameters.neoTargets[i]
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
-                    runAsStage(script: script, stageName: stageName, node: env.NODE_NAME) {
+                    node(env.NODE_NAME) {
+                        unstashFiles script: script, stage: stageName
                         deployToNeoWithCli script: parameters.script, target: target, deploymentType: DeploymentType.selectFor(CloudPlatform.NEO, parameters.isProduction.asBoolean()), source: source
+                        stashFiles script: script, stage: stageName
                     }
                 }
                 index++
