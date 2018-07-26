@@ -40,12 +40,12 @@ def call(Map parameters = [:], body) {
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
         def options = [name      : 'dynamic-agent-' + mergedStageConfiguration.uniqueId,
-                       label     : mergedStageConfiguration.uniqueId,
+                       label     : nodeLabel ?: mergedStageConfiguration.uniqueId,
                        containers: containers]
         if (env.jaas_owner && containers.size() > 1) {
-            withEnv(["S4SDK_STAGE_NAME=${stageName}"]) {
+            withEnv(["STAGE_NAME=${stageName}"]) {
                 podTemplate(options) {
-                    node(mergedStageConfiguration.uniqueId) {
+                    node(nodeLabel ?: mergedStageConfiguration.uniqueId) {
                         unstashFiles script: script, stage: stageName
                         executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
                         stashFiles script: script, stage: stageName
