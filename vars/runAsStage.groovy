@@ -1,7 +1,7 @@
 import com.sap.piper.ConfigurationHelper
 import com.sap.piper.ConfigurationLoader
 import com.sap.piper.ConfigurationMerger
-import com.sap.piper.SysEnv
+import com.sap.cloud.sdk.s4hana.pipeline.ConfigUtil
 
 import java.util.UUID
 
@@ -33,7 +33,7 @@ def call(Map parameters = [:], body) {
     mergedStageConfiguration.uniqueId = UUID.randomUUID().toString()
     String nodeLabel = generalConfiguration.defaultNode
 
-    def containersMap = getContainersMap(script,stageName)
+    def containersMap = ConfigUtil.getContainersMap(script,stageName)
     if (mergedStageConfiguration.node) {
         nodeLabel = mergedStageConfiguration.node
     }
@@ -73,12 +73,3 @@ private executeStage(Closure originalStage, String stageName, Map stageConfigura
     }
 }
 
-private Map getContainersMap(script, stageName){
-    Map containers = [:]
-    Map containerConfig = (script?.commonPipelineEnvironment?.configuration?.k8sMapping) ?: [:]
-    if(!containerConfig.containsKey(stageName)){
-        return containers
-    }
-    containers = containerConfig[stageName]
-    return containers
-}

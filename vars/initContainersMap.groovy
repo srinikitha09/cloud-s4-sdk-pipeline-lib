@@ -6,7 +6,7 @@ def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
 
-        script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script)
+        script.commonPipelineEnvironment.configuration.general.k8sMapping = getContainers(script)
     }
 }
 

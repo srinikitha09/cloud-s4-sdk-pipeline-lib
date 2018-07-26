@@ -1,5 +1,6 @@
 import com.sap.cloud.sdk.s4hana.pipeline.CloudPlatform
 import com.sap.cloud.sdk.s4hana.pipeline.DeploymentType
+import com.sap.cloud.sdk.s4hana.pipeline.ConfigUtil
 
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'deployToCloudPlatform', stepParameters: parameters) {
@@ -10,21 +11,24 @@ def call(Map parameters = [:]) {
         if (parameters.cfTargets) {
             for (int i = 0; i < parameters.cfTargets.size(); i++) {
                 def target = parameters.cfTargets[i]
-                if (env.jaas_owner) {
-                    deployments["Deployment ${index > 1 ? index : ''}"] = {
-                        deployToCfWithCli script: parameters.script, appName: target.appName, org: target.org, space: target.space, apiEndpoint: target.apiEndpoint, manifest: target.manifest, credentialsId: target.credentialsId, deploymentType: DeploymentType.selectFor(CloudPlatform.CLOUD_FOUNDRY, parameters.isProduction.asBoolean())
-                    }
-                } else {
+                Closure deployment = {
+                    unstashFiles script: script, stage: stageName
+                    deployToCfWithCli script: parameters.script, appName: target.appName, org: target.org, space: target.space, apiEndpoint: target.apiEndpoint, manifest: target.manifest, credentialsId: target.credentialsId, deploymentType: DeploymentType.selectFor(CloudPlatform.CLOUD_FOUNDRY, parameters.isProduction.asBoolean())
+                    stashFiles script: script, stage: stageName
+                }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
-                    node(env.NODE_NAME) {
-                        unstashFiles script: script, stage: stageName
-                        deployToCfWithCli script: parameters.script, appName: target.appName, org: target.org, space: target.space, apiEndpoint: target.apiEndpoint, manifest: target.manifest, credentialsId: target.credentialsId, deploymentType: DeploymentType.selectFor(CloudPlatform.CLOUD_FOUNDRY, parameters.isProduction.asBoolean())
-                        stashFiles script: script, stage: stageName
+                    if (env.POD_NAME) {
+                        runAsPod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
+                            deployment.run()
+                        }
+                    } else {
+                        node(env.NODE_NAME) {
+                            deployment.run()
+                        }
                     }
                 }
-            }
 
-            index++
+                index++
             }
             runClosures deployments, script
         } else if (parameters.neoTargets) {
@@ -33,20 +37,22 @@ def call(Map parameters = [:]) {
             def source = "application/target/${pom.getArtifactId()}.${pom.getPackaging()}"
             for (int i = 0; i < parameters.neoTargets.size(); i++) {
                 def target = parameters.neoTargets[i]
-                if (env.jaas_owner) {
-                    deployments["Deployment ${index > 1 ? index : ''}"] = {
-                        deployToNeoWithCli script: parameters.script, target: target, deploymentType: DeploymentType.selectFor(CloudPlatform.NEO, parameters.isProduction.asBoolean()), source: source
-                    }
-                } else {
-                    deployments["Deployment ${index > 1 ? index : ''}"] = {
+                Closure deployment = {
+                    unstashFiles script: script, stage: stageName
+                    deployToNeoWithCli script: parameters.script, target: target, deploymentType: DeploymentType.selectFor(CloudPlatform.NEO, parameters.isProduction.asBoolean()), source: source
+                    stashFiles script: script, stage: stageName
+                }
+                deployments["Deployment ${index > 1 ? index : ''}"] = {
+                    if (env.POD_NAME) {
+                        runAsPod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
+                            deployment.run()
+                        }
+                    } else {
                         node(env.NODE_NAME) {
-                            unstashFiles script: script, stage: stageName
-                            deployToNeoWithCli script: parameters.script, target: target, deploymentType: DeploymentType.selectFor(CloudPlatform.NEO, parameters.isProduction.asBoolean()), source: source
-                            stashFiles script: script, stage: stageName
+                            deployment.run()
                         }
                     }
                 }
-
                 index++
             }
             runClosures deployments, script
