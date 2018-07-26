@@ -18,7 +18,7 @@ def call(Map parameters) {
         loadS4sdkDefaultValues script: script
         echo "Values are ${ConfigurationLoader.stepConfiguration(script, 'executeNpm')}"
 
-        script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script: script)
+        script.commonPipelineEnvironment.configuration.k8sMapping = getContainers(script)
         echo "Values are ${script.commonPipelineEnvironment.configuration.k8sMapping}"
 
         convertLegacyConfiguration script: script
