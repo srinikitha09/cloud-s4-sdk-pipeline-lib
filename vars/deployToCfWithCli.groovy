@@ -1,8 +1,8 @@
 import com.sap.cloud.sdk.s4hana.pipeline.BashUtils
 import com.sap.cloud.sdk.s4hana.pipeline.CfTarget
 import com.sap.cloud.sdk.s4hana.pipeline.DeploymentType
-import com.sap.piper.ConfigurationMerger
 import com.sap.piper.ConfigurationLoader
+import com.sap.piper.ConfigurationMerger
 
 def call(Map parameters = [:]) {
 
@@ -48,18 +48,18 @@ def call(Map parameters = [:]) {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: cfTarget.credentialsId, passwordVariable: 'CF_PASSWORD', usernameVariable: 'CF_USERNAME']]) {
                 cfTarget.setUsername(CF_USERNAME)
                 cfTarget.setPassword(BashUtils.escape(CF_PASSWORD))
-                deploy(configuration.dockerImage, configuration.deploymentType, cfTarget, configuration.smokeTestStatusCode)
+                deploy(script, configuration.dockerImage, configuration.deploymentType, cfTarget, configuration.smokeTestStatusCode)
             }
         } else if (cfTarget.isUsernameAndPasswordDefined()) {
-            deploy(configuration.dockerImage, configuration.deploymentType, cfTarget, configuration.smokeTestStatusCode)
+            deploy(script, configuration.dockerImage, configuration.deploymentType, cfTarget, configuration.smokeTestStatusCode)
         } else {
             throw new Exception("ERROR - EITHER SPECIFY credentialsId OR username and password")
         }
     }
 }
 
-private deploy(dockerImage, deploymentType, cfTarget, statusCode) {
-    dockerExecute(dockerImage: dockerImage) {
+private deploy(script, dockerImage, deploymentType, cfTarget, statusCode) {
+    dockerExecute(script: script, dockerImage: dockerImage) {
         lock("${cfTarget.apiEndpoint}/${cfTarget.org}/${cfTarget.space}/${cfTarget.appName}") {
             if (deploymentType == DeploymentType.BLUE_GREEN) {
                 withEnv(["STATUS_CODE=${statusCode}"]) {
