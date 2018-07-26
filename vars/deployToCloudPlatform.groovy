@@ -15,7 +15,7 @@ def call(Map parameters = [:]) {
                         deployToCfWithCli script: parameters.script, appName: target.appName, org: target.org, space: target.space, apiEndpoint: target.apiEndpoint, manifest: target.manifest, credentialsId: target.credentialsId, deploymentType: DeploymentType.selectFor(CloudPlatform.CLOUD_FOUNDRY, parameters.isProduction.asBoolean())
                     }
                 }
-            } else {
+             else {
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     node(env.NODE_NAME) {
                         unstashFiles script: script, stage: stageName
