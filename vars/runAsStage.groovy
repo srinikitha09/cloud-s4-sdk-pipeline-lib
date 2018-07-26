@@ -31,7 +31,7 @@ def call(Map parameters = [:], body) {
         stageDefaultConfiguration
     )
     mergedStageConfiguration.uniqueId = UUID.randomUUID().toString()
-    def containers = getContainerList(script, mergedStageConfiguration, stageName)
+    def containersTemplate = getContainerList(script, mergedStageConfiguration, stageName)
     String nodeLabel = generalConfiguration.defaultNode
 
 
@@ -39,18 +39,13 @@ def call(Map parameters = [:], body) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        def options = [name      : 'dynamic-agent-' + mergedStageConfiguration.uniqueId,
-                       label     : nodeLabel ?: mergedStageConfiguration.uniqueId,
-                       containers: containers]
         if (env.jaas_owner && containers.size() > 1) {
-            withEnv(["STAGE_NAME=${stageName}"]) {
-                podTemplate(options) {
-                    node(nodeLabel ?: mergedStageConfiguration.uniqueId) {
+            withEnv(["POD_NAME=${stageName}"]) {
+                runAsPod(script: script, containersMap: getContainersMap) {
                         unstashFiles script: script, stage: stageName
                         executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
                         stashFiles script: script, stage: stageName
                         echo "Current build result in stage $stageName is ${script.currentBuild.result}."
-                    }
                 }
             }
         } else {
@@ -79,44 +74,12 @@ private executeStage(Closure originalStage, String stageName, Map stageConfigura
     }
 }
 
-private getContainerList(script, config, stageName) {
-    def envVars
-    def jnlpAgent = ConfigurationLoader.generalConfiguration(script).jnlpAgent ?: 's4sdk/jenkins-agent-k8s:latest'
+private Map getContainersMap(script, stageName){
+    Map containers = [:]
     Map containerConfig = (script?.commonPipelineEnvironment?.configuration?.k8sMapping) ?: [:]
     if(!containerConfig.containsKey(stageName)){
-       return [:]
+        return containers
     }
-    Map containers = containerConfig[stageName]
-
-    envVars = getContainerEnvs()
-    result = []
-    result.push(containerTemplate(name: 'jnlp',
-        image: jnlpAgent,
-        args: '${computer.jnlpmac} ${computer.name}'))
-
-    containers.each { k, v ->
-        result.push(containerTemplate(name: v,
-            image: k,
-            alwaysPullImage: true,
-            command: '/usr/bin/tail -f /dev/null',
-            envVars: envVars))
-    }
-    return result
+    containers = containerConfig[stageName]
+    return containers
 }
-
-private getContainerEnvs() {
-    def containerEnv = []
-
-    // Inherit the proxy information from the master to the container
-    def systemEnv = new SysEnv()
-    def envList = systemEnv.getEnv().keySet()
-    for (String env : envList) {
-        containerEnv << envVar(key: env, value: systemEnv.get(env))
-    }
-
-    // ContainerEnv array can't be empty. Using a stub to avoid failure.
-    if (!containerEnv) containerEnv << envVar(key: "EMPTY_VAR", value: " ")
-
-    return containerEnv
-}
-
