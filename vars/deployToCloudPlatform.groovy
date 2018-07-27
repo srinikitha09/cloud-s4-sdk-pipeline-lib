@@ -18,7 +18,7 @@ def call(Map parameters = [:]) {
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        runAsPod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
+                        runInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
                             deployment.run()
                         }
                     } else {
@@ -44,7 +44,7 @@ def call(Map parameters = [:]) {
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        runAsPod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
+                        runInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
                             deployment.run()
                         }
                     } else {

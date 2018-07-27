@@ -40,7 +40,7 @@ def call(Map parameters = [:], body) {
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
         if (env.jaas_owner && containersMap.size() > 0) {
             withEnv(["POD_NAME=${stageName}"]) {
-                runAsPod(script: script, containersMap: containersMap) {
+                runInsidePod(script: script, containersMap: containersMap) {
                         unstashFiles script: script, stage: stageName
                         executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
                         stashFiles script: script, stage: stageName
