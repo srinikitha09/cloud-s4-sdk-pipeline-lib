@@ -10,7 +10,7 @@ class ConfigUtil implements Serializable {
     static Map getContainersMap(script, stageName) {
         Map containers = [:]
         def generalConfiguration = ConfigurationLoader.generalConfiguration(script)
-        Map containerConfig = generalConfiguration?.k8sMapping ?: [:]
+        Map containerConfig = generalConfiguration?.kubernetes?.k8sMapping ?: [:]
         if (!containerConfig.containsKey(stageName)) {
             return containers
         }

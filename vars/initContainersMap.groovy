@@ -6,7 +6,7 @@ def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
 
-        script.commonPipelineEnvironment.configuration.general.k8sMapping = getContainers(script)
+        script.commonPipelineEnvironment.configuration.general.kubernetes.k8sMapping = getContainers(script)
     }
 }
 
@@ -29,28 +29,28 @@ Map getContainers(script) {
                               'productionDeployment': ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm', 'deployToCfWithCli': 'deployToCfWithCli', 'deployToNeoWithCli': 'deployToNeoWithCli']
 
     ]
-    stageToStepMapping.each { k, v -> containers[k] = getContainersList(script, v) }
+    stageToStepMapping.each { stageName, stepsMap -> containers[k] = getContainersList(script, stageName, stepsMap) }
     return containers
 }
 
 @NonCPS
-def getContainersList(script, Map stepsMap) {
+def getContainersList(script, stageName, Map stepsMap) {
     def containers = [:]
-    stepsMap.each { k, v -> containers[updateContainerForStep(script, v)] = k.toString().toLowerCase() }
+    stepsMap.each { containerName, stepName -> containers[updateContainerForStep(script, stageName, stepName)] = containerName.toString().toLowerCase() }
     return containers
 }
 
 @NonCPS
-def updateContainerForStep(script, stepName) {
-    def parameters = [:]
+def updateContainerForStep(script, stageName, stepName) {
+    def stageConfiguration = ConfigurationLoader.stageConfiguration(script, stageName)
     final Map stepDefaults = ConfigurationLoader.defaultStepConfiguration(script, stepName)
 
     final Map stepConfiguration = ConfigurationLoader.stepConfiguration(script, stepName)
 
-    Set parameterKeys = ['dockerImage']
+    Set stageConfigurationKeys = ['dockerImage']
     Set stepConfigurationKeys = ['dockerImage']
 
-    Map configuration = ConfigurationMerger.merge(parameters, parameterKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
+    Map configuration = ConfigurationMerger.merge(stageConfiguration, stageConfigurationKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
 
     return (configuration.dockerImage).toString()
 }
