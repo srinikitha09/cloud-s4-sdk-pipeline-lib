@@ -18,7 +18,7 @@ def call(Map parameters = [:]) {
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        runInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
+                        runInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName), dockerWorkspace: '/home/piper') {
                             deployment.run()
                         }
                     } else {
