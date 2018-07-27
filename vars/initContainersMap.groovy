@@ -29,7 +29,7 @@ Map getContainers(script) {
                               'productionDeployment': ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm', 'deployToCfWithCli': 'deployToCfWithCli', 'deployToNeoWithCli': 'deployToNeoWithCli']
 
     ]
-    stageToStepMapping.each { stageName, stepsMap -> containers[k] = getContainersList(script, stageName, stepsMap) }
+    stageToStepMapping.each { stageName, stepsMap -> containers[stageName] = getContainersList(script, stageName, stepsMap) }
     return containers
 }
 
