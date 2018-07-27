@@ -1,7 +1,7 @@
+import com.sap.cloud.sdk.s4hana.pipeline.ConfigUtil
 import com.sap.cloud.sdk.s4hana.pipeline.DownloadCacheUtils
 import com.sap.cloud.sdk.s4hana.pipeline.E2ETestCommandHelper
 import com.sap.cloud.sdk.s4hana.pipeline.EndToEndTestType
-import com.sap.cloud.sdk.s4hana.pipeline.ConfigUtil
 
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'executeEndToEndTest', stepParameters: parameters) {
@@ -58,7 +58,7 @@ def call(Map parameters = [:]) {
                 }
                 parallelE2ETests["E2E Tests ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        runAsPod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
+                        runAsPod(script: script, containersMap: ConfigUtil.getContainersMap(script, parameters.stage)) {
                             e2eTest.run()
                         }
                     } else {

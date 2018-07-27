@@ -1,7 +1,7 @@
+import com.sap.cloud.sdk.s4hana.pipeline.ConfigUtil
 import com.sap.piper.ConfigurationHelper
 import com.sap.piper.ConfigurationLoader
 import com.sap.piper.ConfigurationMerger
-import com.sap.cloud.sdk.s4hana.pipeline.ConfigUtil
 
 import java.util.UUID
 
