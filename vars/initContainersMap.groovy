@@ -37,7 +37,8 @@ Map getContainers(script) {
 def getContainersList(script, stageName, Map stepsMap) {
     def containers = [:]
     stepsMap.each { containerName, stepName ->
-        if (updateContainerForStep(script, stageName, stepName)) {
+        def imageName = updateContainerForStep(script, stageName, stepName)
+        if (imageName) {
             containers[imageName] = containerName.toString().toLowerCase()
         }
     }
