@@ -38,8 +38,7 @@ def call(Map parameters = [:], body) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        boolean runOnKubernetes = ConfigurationLoader.generalConfiguration(script)?.kubernetes?.enabled ?: false
-        if (runOnKubernetes && containersMap.size() > 0) {
+        if (env.ON_K8S == 'true' && containersMap.size() > 0) {
             withEnv(["POD_NAME=${stageName}"]) {
                 runInsidePod(script: script, containersMap: containersMap) {
                         unstashFiles script: script, stage: stageName
