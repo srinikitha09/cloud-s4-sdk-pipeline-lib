@@ -36,7 +36,11 @@ Map getContainers(script) {
 @NonCPS
 def getContainersList(script, stageName, Map stepsMap) {
     def containers = [:]
-    stepsMap.each { containerName, stepName -> containers[updateContainerForStep(script, stageName, stepName)] = containerName.toString().toLowerCase() }
+    stepsMap.each { containerName, stepName ->
+        if (updateContainerForStep(script, stageName, stepName)) {
+            containers[imageName] = containerName.toString().toLowerCase()
+        }
+    }
     return containers
 }
 
@@ -52,5 +56,5 @@ def updateContainerForStep(script, stageName, stepName) {
 
     Map configuration = ConfigurationMerger.merge(stageConfiguration, stageConfigurationKeys, stepConfiguration, stepConfigurationKeys, stepDefaults)
 
-    return (configuration.dockerImage).toString()
+    return configuration.dockerImage ?: ''
 }
