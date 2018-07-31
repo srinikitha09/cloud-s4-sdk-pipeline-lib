@@ -16,6 +16,7 @@ def call(Map parameters) {
         loadS4sdkDefaultValues script: script
         convertLegacyConfiguration script: script
         setupDownloadCache script: script
+        echo "${script.commonPipelineEnvironment.configuration}"
         initContainersMap script: script
     }
 }
