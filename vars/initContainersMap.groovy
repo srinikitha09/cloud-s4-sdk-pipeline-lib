@@ -5,6 +5,7 @@ import com.sap.piper.ConfigurationMerger
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
+        echo "${script.commonPipelineEnvironment.configuration.steps}"
         script.commonPipelineEnvironment.configuration.steps.kubernetes.imageToContainerMap = getContainers(script)
     }
 }

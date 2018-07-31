@@ -23,7 +23,7 @@ steps:
     dockerImage: gradle:4.7.0-jdk8
   kubernetes:
     jnlpAgent: 'jenkinsci/jnlp-slave:latest'
-    imageToContainerMap: ['':'']
+    imageToContainerMap: ['' : '']
   executeSourceClearScan:
     dockerImage: s4sdk/docker-maven-npm
 
