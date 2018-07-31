@@ -17,8 +17,6 @@ def call(Map parameters) {
 
         initS4SdkPipelineLibrary script: script
         initStashConfiguration script: script
-        echo "${script.commonPipelineEnvironment.configuration}"
-        initContainersMap script: script
 
         def mavenLocalRepository = new File(script.s4SdkGlobals.m2Directory)
         def reportsDirectory = new File(script.s4SdkGlobals.reportsDirectory)
