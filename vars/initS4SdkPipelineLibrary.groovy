@@ -1,7 +1,3 @@
-import com.cloudbees.groovy.cps.NonCPS
-import com.sap.piper.ConfigurationLoader
-import com.sap.piper.ConfigurationMerger
-
 def call(Map parameters) {
     handleStepErrors(stepName: 'initS4SdkPipelineLibrary', stepParameters: parameters) {
         def script = parameters.script
@@ -16,7 +12,9 @@ def call(Map parameters) {
         loadS4sdkDefaultValues script: script
         convertLegacyConfiguration script: script
         setupDownloadCache script: script
-        initContainersMap script: script
+        if (env.ON_K8S == 'true') {
+            initContainersMap script: script
+        }
     }
 }
 
