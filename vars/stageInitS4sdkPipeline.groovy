@@ -58,6 +58,8 @@ def call(Map parameters) {
         script.commonPipelineEnvironment.configuration.stashFiles = "${prefix}/stashFiles"
 
         initStageSkipConfiguration script: script
+        echo "${script.commonPipelineEnvironment.configuration}"
+        initContainersMap script: script
     }
 }
 
