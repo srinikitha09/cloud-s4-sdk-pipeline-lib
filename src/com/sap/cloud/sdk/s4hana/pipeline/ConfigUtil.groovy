@@ -10,7 +10,7 @@ class ConfigUtil implements Serializable {
     static Map getContainersMap(script, stageName) {
         Map containers = [:]
         Map stepConfig = ConfigurationLoader.stepConfiguration(script, 'kubernetes')
-        Map containerConfig = stepConfig?.k8sMapping ?: [:]
+        Map containerConfig = stepConfig?.imageToContainerMap ?: [:]
         if (!containerConfig.containsKey(stageName)) {
             return containers
         }
