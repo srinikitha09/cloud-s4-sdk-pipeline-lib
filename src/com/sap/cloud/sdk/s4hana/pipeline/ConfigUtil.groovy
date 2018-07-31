@@ -9,8 +9,8 @@ class ConfigUtil implements Serializable {
     @NonCPS
     static Map getContainersMap(script, stageName) {
         Map containers = [:]
-        def generalConfiguration = ConfigurationLoader.generalConfiguration(script)
-        Map containerConfig = generalConfiguration?.kubernetes?.k8sMapping ?: [:]
+        Map stepConfig = ConfigurationLoader.stepConfiguration(script, 'kubernetes')
+        Map containerConfig = stepConfig?.k8sMapping ?: [:]
         if (!containerConfig.containsKey(stageName)) {
             return containers
         }
