@@ -12,9 +12,6 @@ def call(Map parameters) {
         loadS4sdkDefaultValues script: script
         convertLegacyConfiguration script: script
         setupDownloadCache script: script
-        if (env.ON_K8S == 'true') {
-            initContainersMap script: script
-        }
     }
 }
 

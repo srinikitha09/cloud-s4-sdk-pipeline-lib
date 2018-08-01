@@ -5,10 +5,17 @@ import com.sap.piper.ConfigurationMerger
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
+        Map defaultGeneralConfig = ConfigurationLoader.defaultGeneralConfiguration(script)?.jenkinsKubernetes ?: [:]
+        Map generalConfig = ConfigurationLoader.generalConfiguration(script)?.jenkinsKubernetes ?: [:]
+        Set generalConfigKeys = ['jnlpAgent',
+                                 'imageToContainerMap']
+        Map localConfig = [:]
+        Set localConfigKeys = ['imageToContainerMap']
+        localConfig['imageToContainerMap'] = getContainers(script)
 
-        echo "${script.commonPipelineEnvironment.configuration.steps.kubernetes}"
-        script.commonPipelineEnvironment.configuration.steps.kubernetes['imageToContainerMap'] = getContainers(script)
-        echo "${script.commonPipelineEnvironment.configuration.steps.kubernetes}"
+        echo "${script.commonPipelineEnvironment.configuration.general['jenkinsKubernetes']}"
+        script.commonPipelineEnvironment.configuration.general['jenkinsKubernetes'] = ConfigurationMerger.merge(localConfig, localConfigKeys, generalConfig, generalConfigKeys, defaultGeneralConfig)
+        echo "${script.commonPipelineEnvironment.configuration.general['jenkinsKubernetes']}"
     }
 }
 

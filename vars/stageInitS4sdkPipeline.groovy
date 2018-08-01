@@ -17,6 +17,9 @@ def call(Map parameters) {
 
         initS4SdkPipelineLibrary script: script
         initStashConfiguration script: script
+        if (env.ON_K8S == 'true') {
+            initContainersMap script: script
+        }
 
         def mavenLocalRepository = new File(script.s4SdkGlobals.m2Directory)
         def reportsDirectory = new File(script.s4SdkGlobals.reportsDirectory)
