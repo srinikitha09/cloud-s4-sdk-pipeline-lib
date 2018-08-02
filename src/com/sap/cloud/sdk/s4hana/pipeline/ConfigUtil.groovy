@@ -9,12 +9,10 @@ class ConfigUtil implements Serializable {
     @NonCPS
     static Map getContainersMap(script, stageName) {
         Map containers = [:]
-        Map stepConfig = ConfigurationLoader.stepConfiguration(script, 'kubernetes')
-        Map containerConfig = stepConfig?.imageToContainerMap ?: [:]
-        if (!containerConfig.containsKey(stageName)) {
-            return containers
+        Map containerConfig = ConfigurationLoader.generalConfiguration(script)?.jenkinsKubernetes?.imageToContainerMap ?: [:]
+        if (containerConfig.containsKey(stageName)) {
+            containers = containerConfig[stageName]
         }
-        containers = containerConfig[stageName]
         return containers
     }
 }

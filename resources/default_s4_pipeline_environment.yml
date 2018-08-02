@@ -22,9 +22,6 @@ steps:
   executeGradle:
     dockerImage: gradle:4.7.0-jdk8
 
-  kubernetes:
-    jnlpAgent: 'jenkinsci/jnlp-slave:latest'
-
   executeSourceClearScan:
     dockerImage: s4sdk/docker-maven-npm
 
@@ -32,7 +29,6 @@ steps:
     includeFilterFile: s4hana_findbugs_include_filter.xml
     scanModules:
       - 'application'
-
   checkPmd:
     scanModules:
       - 'application'
