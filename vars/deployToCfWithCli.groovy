@@ -60,13 +60,13 @@ def call(Map parameters = [:]) {
 
 private deploy(script, dockerImage, deploymentType, cfTarget, statusCode) {
     dockerExecute(script: script, dockerImage: dockerImage) {
+        sh "env"
         lock("${cfTarget.apiEndpoint}/${cfTarget.org}/${cfTarget.space}/${cfTarget.appName}") {
             if (deploymentType == DeploymentType.BLUE_GREEN) {
                 withEnv(["STATUS_CODE=${statusCode}"]) {
                     def smokeTestScript = 'blue_green_check.sh'
                     writeFile file: smokeTestScript, text: libraryResource(smokeTestScript)
                     def smokeTest = '--smoke-test $(pwd)/' + smokeTestScript
-                    sh "env"
                     sh "chmod +x ${smokeTestScript}"
                     sh "cf login -u ${cfTarget.username} -p ${cfTarget.password} -a ${cfTarget.apiEndpoint} -o ${cfTarget.org} -s ${cfTarget.space}"
                     sh "cf blue-green-deploy ${cfTarget.appName} -f ${cfTarget.manifest} ${smokeTest}"
