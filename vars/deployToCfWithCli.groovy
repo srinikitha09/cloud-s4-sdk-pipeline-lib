@@ -60,7 +60,8 @@ def call(Map parameters = [:]) {
 
 private deploy(script, dockerImage, deploymentType, cfTarget, statusCode) {
     dockerExecute(script: script, dockerImage: dockerImage) {
-        sh "pwd && ~ && sleep 600"
+        sh "echo ~"
+        sh "pwd && sleep 600"
         lock("${cfTarget.apiEndpoint}/${cfTarget.org}/${cfTarget.space}/${cfTarget.appName}") {
             if (deploymentType == DeploymentType.BLUE_GREEN) {
                 withEnv(["STATUS_CODE=${statusCode}"]) {
