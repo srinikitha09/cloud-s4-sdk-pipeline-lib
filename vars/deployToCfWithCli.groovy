@@ -66,6 +66,7 @@ private deploy(script, dockerImage, deploymentType, cfTarget, statusCode) {
                     def smokeTestScript = 'blue_green_check.sh'
                     writeFile file: smokeTestScript, text: libraryResource(smokeTestScript)
                     def smokeTest = '--smoke-test $(pwd)/' + smokeTestScript
+                    sh "env"
                     sh "chmod +x ${smokeTestScript}"
                     sh "cf login -u ${cfTarget.username} -p ${cfTarget.password} -a ${cfTarget.apiEndpoint} -o ${cfTarget.org} -s ${cfTarget.space}"
                     sh "cf blue-green-deploy ${cfTarget.appName} -f ${cfTarget.manifest} ${smokeTest}"
