@@ -18,7 +18,7 @@ def call(Map parameters = [:]) {
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        runInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName), dockerWorkspace: '/home/piper') {
+                        containerExecuteInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName), dockerWorkspace: '/home/piper') {
                             deployment.run()
                         }
                     } else {
@@ -44,7 +44,7 @@ def call(Map parameters = [:]) {
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        runInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
+                        containerExecuteInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, stageName)) {
                             deployment.run()
                         }
                     } else {
