@@ -33,14 +33,14 @@ def call(Map parameters = [:], body) {
     mergedStageConfiguration.uniqueId = UUID.randomUUID().toString()
     String nodeLabel = generalConfiguration.defaultNode
 
-    def containersMap = ConfigUtil.getContainersMap(script,stageName)
+    def containerMap = ConfigUtil.getContainersMap(script,stageName)
     if (mergedStageConfiguration.node) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        if (env.ON_K8S == 'true' && containersMap.size() > 0) {
+        if (env.ON_K8S == 'true' && containerMap.size() > 0) {
             withEnv(["POD_NAME=${stageName}"]) {
-                containerExecuteInsidePod(script: script, containersMap: containersMap) {
+                containerExecuteInsidePod(script: script, containerMap: containerMap) {
                         unstashFiles script: script, stage: stageName
                         executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
                         stashFiles script: script, stage: stageName

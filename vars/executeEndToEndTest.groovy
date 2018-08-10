@@ -58,7 +58,7 @@ def call(Map parameters = [:]) {
                 }
                 parallelE2ETests["E2E Tests ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        containerExecuteInsidePod(script: script, containersMap: ConfigUtil.getContainersMap(script, parameters.stage)) {
+                        containerExecuteInsidePod(script: script, containerMap: ConfigUtil.getContainersMap(script, parameters.stage)) {
                             e2eTest.run()
                         }
                     } else {
