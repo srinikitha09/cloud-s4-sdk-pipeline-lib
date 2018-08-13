@@ -12,10 +12,7 @@ def call(Map parameters = [:]) {
         Map localConfig = [:]
         Set localConfigKeys = ['imageToContainerMap']
         localConfig['imageToContainerMap'] = getContainers(script)
-
-        echo "${script.commonPipelineEnvironment.configuration.general['jenkinsKubernetes']}"
         script.commonPipelineEnvironment.configuration.general['jenkinsKubernetes'] = ConfigurationMerger.merge(localConfig, localConfigKeys, generalConfig, generalConfigKeys, defaultGeneralConfig)
-        echo "${script.commonPipelineEnvironment.configuration.general['jenkinsKubernetes']}"
     }
 }
 
