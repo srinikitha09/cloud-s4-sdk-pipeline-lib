@@ -40,7 +40,7 @@ def call(Map parameters = [:], body) {
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
         if (env.ON_K8S == 'true' && containerMap.size() > 0) {
             withEnv(["POD_NAME=${stageName}"]) {
-                containerExecuteInsidePod(script: script, containerMap: containerMap) {
+                dockerExecuteOnKubernetes(script: script, containerMap: containerMap) {
                         unstashFiles script: script, stage: stageName
                         executeStage(body, stageName, mergedStageConfiguration, generalConfiguration)
                         stashFiles script: script, stage: stageName
