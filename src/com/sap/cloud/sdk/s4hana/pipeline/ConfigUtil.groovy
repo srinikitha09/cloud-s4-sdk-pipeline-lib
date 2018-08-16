@@ -2,6 +2,7 @@ package com.sap.cloud.sdk.s4hana.pipeline
 
 import com.cloudbees.groovy.cps.NonCPS
 import com.sap.piper.ConfigurationLoader
+import com.sap.piper.ContainerMap
 
 class ConfigUtil implements Serializable {
     static final long serialVersionUID = 1L
@@ -9,7 +10,7 @@ class ConfigUtil implements Serializable {
     @NonCPS
     static Map getContainersMap(script, stageName) {
         Map containers = [:]
-        Map containerConfig = ConfigurationLoader.generalConfiguration(script)?.jenkinsKubernetes?.imageToContainerMap ?: [:]
+        Map containerConfig = ContainerMap.instance.getMap()
         if (containerConfig.containsKey(stageName)) {
             containers = containerConfig[stageName]
         }
