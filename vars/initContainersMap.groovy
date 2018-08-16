@@ -6,7 +6,7 @@ import com.sap.piper.ContainerMap
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
-        ContainerMap.getInstance().setMap(getContainers(script))
+        ContainerMap.instance.setMap(getContainers(script))
     }
 }
 
