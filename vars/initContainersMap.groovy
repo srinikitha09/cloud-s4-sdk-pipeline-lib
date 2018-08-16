@@ -1,18 +1,12 @@
 import com.cloudbees.groovy.cps.NonCPS
 import com.sap.piper.ConfigurationLoader
 import com.sap.piper.ConfigurationMerger
+import com.sap.piper.ContainerMap
 
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {
         def script = parameters.script
-        Map defaultGeneralConfig = ConfigurationLoader.defaultGeneralConfiguration(script)?.jenkinsKubernetes ?: [:]
-        Map generalConfig = ConfigurationLoader.generalConfiguration(script)?.jenkinsKubernetes ?: [:]
-        Set generalConfigKeys = ['jnlpAgent',
-                                 'imageToContainerMap']
-        Map localConfig = [:]
-        Set localConfigKeys = ['imageToContainerMap']
-        localConfig['imageToContainerMap'] = getContainers(script)
-        script.commonPipelineEnvironment.configuration.general['jenkinsKubernetes'] = ConfigurationMerger.merge(localConfig, localConfigKeys, generalConfig, generalConfigKeys, defaultGeneralConfig)
+        ContainerMap.getInstance().setMap(getContainers(script))
     }
 }
 
