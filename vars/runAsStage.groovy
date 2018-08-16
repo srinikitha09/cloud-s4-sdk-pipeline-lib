@@ -38,7 +38,7 @@ def call(Map parameters = [:], body) {
         nodeLabel = mergedStageConfiguration.node
     }
     handleStepErrors(stepName: stageName, stepParameters: [:]) {
-        if (env.ON_K8S == 'true' && containerMap.size() > 0) {
+        if (Boolean.valueOf(env.ON_K8S) && containerMap.size() > 0) {
             echo "stageName ${stageName}"
             withEnv(["POD_NAME=${stageName}"]) {
                 echo "POD_NAME ${env.POD_NAME}"
