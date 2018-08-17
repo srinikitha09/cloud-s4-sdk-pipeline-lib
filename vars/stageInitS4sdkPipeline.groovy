@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.dgmimpl.arrays.BooleanArrayGetAtMetaMethod
+
 def call(Map parameters) {
     def stageName = 'initS4sdkPipeline'
     def script = parameters.script
@@ -17,7 +19,7 @@ def call(Map parameters) {
 
         initS4SdkPipelineLibrary script: script
         initStashConfiguration script: script
-        if (env.ON_K8S == 'true') {
+        if (Boolean.valueOf(env.ON_K8S)) {
             initContainersMap script: script
         }
 

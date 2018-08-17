@@ -20,13 +20,13 @@ Map getContainers(script) {
                               'integrationTests'    : ['mavenExecute': 'mavenExecute'],
                               'frontendUnitTests'   : ['executeNpm': 'executeNpm'],
                               'nodeSecurityPlatform': ['executeNpm': 'checkNodeSecurityPlatform'],
-                              'endToEndTests'       : ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm', 'deployToCfWithCli': 'deployToCfWithCli', 'deployToNeoWithCli': 'deployToNeoWithCli'],
-                              'performanceTests'    : ['mavenExecute': 'mavenExecute', 'checkJMeter': 'checkJMeter', 'deployToCfWithCli': 'deployToCfWithCli', 'deployToNeoWithCli': 'deployToNeoWithCli'],
+                              'endToEndTests'       : ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm', 'cloudFoundryDeploy': 'cloudFoundryDeploy', 'deployToNeoWithCli': 'deployToNeoWithCli'],
+                              'performanceTests'    : ['mavenExecute': 'mavenExecute', 'checkJMeter': 'checkJMeter', 'cloudFoundryDeploy': 'cloudFoundryDeploy', 'deployToNeoWithCli': 'deployToNeoWithCli'],
                               's4SdkQualityChecks'  : ['mavenExecute': 'mavenExecute'],
                               'artifactDeployment'  : ['mavenExecute': 'mavenExecute'],
                               'whitesourceScan'     : ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm'],
                               'sourceClearScan'     : ['executeSourceClearScan': 'executeSourceClearScan'],
-                              'productionDeployment': ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm', 'deployToCfWithCli': 'deployToCfWithCli', 'deployToNeoWithCli': 'deployToNeoWithCli']
+                              'productionDeployment': ['mavenExecute': 'mavenExecute', 'executeNpm': 'executeNpm', 'cloudFoundryDeploy': 'cloudFoundryDeploy', 'deployToNeoWithCli': 'deployToNeoWithCli']
 
     ]
     stageToStepMapping.each { stageName, stepsMap -> containers[stageName] = getContainersList(script, stageName, stepsMap) }

@@ -13,7 +13,12 @@ def call(Map parameters = [:]) {
                 def target = parameters.cfTargets[i]
                 Closure deployment = {
                     unstashFiles script: script, stage: stageName
-                    deployToCfWithCli script: parameters.script, appName: target.appName, org: target.org, space: target.space, apiEndpoint: target.apiEndpoint, manifest: target.manifest, credentialsId: target.credentialsId, deploymentType: DeploymentType.selectFor(CloudPlatform.CLOUD_FOUNDRY, parameters.isProduction.asBoolean())
+                    String deploymentType = DeploymentType.selectFor(
+                        CloudPlatform.CLOUD_FOUNDRY,
+                        parameters.isProduction.asBoolean()
+                    ).toString()
+
+                    cloudFoundryDeploy(script: parameters.script, deployType: deploymentType, cloudFoundry: target)
                     stashFiles script: script, stage: stageName
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
@@ -39,7 +44,12 @@ def call(Map parameters = [:]) {
                 def target = parameters.neoTargets[i]
                 Closure deployment = {
                     unstashFiles script: script, stage: stageName
-                    deployToNeoWithCli script: parameters.script, target: target, deploymentType: DeploymentType.selectFor(CloudPlatform.NEO, parameters.isProduction.asBoolean()), source: source
+                    deployToNeoWithCli(
+                        script: parameters.script,
+                        target: target,
+                        deploymentType: DeploymentType.selectFor(CloudPlatform.NEO, parameters.isProduction.asBoolean()),
+                        source: source
+                    )
                     stashFiles script: script, stage: stageName
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {

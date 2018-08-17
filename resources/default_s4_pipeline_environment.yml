@@ -43,7 +43,7 @@ steps:
   checkNodeSecurityPlatform:
     dockerImage: allthings/nsp
 
-  deployToCfWithCli:
+  cloudFoundryDeploy:
     dockerImage: s4sdk/docker-cf-cli
     smokeTestStatusCode: '200'
 
