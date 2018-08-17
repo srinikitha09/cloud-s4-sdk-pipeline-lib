@@ -49,7 +49,6 @@ def call(Map parameters = [:]) {
                             script.currentBuild.result = 'FAILURE'
                         }
                         throw e
-
                     } finally {
                         archive includes: "${s4SdkGlobals.endToEndReports}/**"
                         step($class: 'CucumberTestResultArchiver', testResults: "${s4SdkGlobals.endToEndReports}/*.json")

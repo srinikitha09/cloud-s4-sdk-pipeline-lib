@@ -14,4 +14,3 @@ def call(Map parameters) {
         setupDownloadCache script: script
     }
 }
-

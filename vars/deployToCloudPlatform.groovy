@@ -32,7 +32,6 @@ def call(Map parameters = [:]) {
                         }
                     }
                 }
-
                 index++
             }
             runClosures deployments, script

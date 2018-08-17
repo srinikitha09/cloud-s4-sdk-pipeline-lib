@@ -3,6 +3,8 @@ general:
   productiveBranch: master
   defaultNode: ''
   automaticVersioning: true
+  collectTelemetryData: false
+
 
 #Steps Specific Configuration
 steps:
@@ -29,6 +31,7 @@ steps:
     includeFilterFile: s4hana_findbugs_include_filter.xml
     scanModules:
       - 'application'
+
   checkPmd:
     scanModules:
       - 'application'
@@ -40,13 +43,11 @@ steps:
     failThreshold: 100
     unstableThreshold: 90
 
+  cloudFoundryDeploy:
+    stashContent: []
+
   checkNodeSecurityPlatform:
     dockerImage: allthings/nsp
-
-  cloudFoundryDeploy:
-    dockerImage: s4sdk/docker-cf-cli
-    smokeTestStatusCode: '200'
-
 
 #Stage Specific Configurations
 stages:
