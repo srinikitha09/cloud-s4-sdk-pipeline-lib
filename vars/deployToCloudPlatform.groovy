@@ -1,6 +1,6 @@
 import com.sap.cloud.sdk.s4hana.pipeline.CloudPlatform
 import com.sap.cloud.sdk.s4hana.pipeline.DeploymentType
-import com.sap.cloud.sdk.s4hana.pipeline.ConfigUtil
+import com.sap.piper.ContainerMap
 
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'deployToCloudPlatform', stepParameters: parameters) {
@@ -23,7 +23,7 @@ def call(Map parameters = [:]) {
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        dockerExecuteOnKubernetes(script: script, containerMap: ConfigUtil.getContainersMap(script, stageName)) {
+                        dockerExecuteOnKubernetes(script: script, containerMap: ContainerMap.instance.getMap().get(stageName) ?: [:]) {
                             deployment.run()
                         }
                     } else {
@@ -53,7 +53,7 @@ def call(Map parameters = [:]) {
                 }
                 deployments["Deployment ${index > 1 ? index : ''}"] = {
                     if (env.POD_NAME) {
-                        dockerExecuteOnKubernetes(script: script, containerMap: ConfigUtil.getContainersMap(script, stageName)) {
+                        dockerExecuteOnKubernetes(script: script, containerMap: ContainerMap.instance.getMap().get(stageName) ?: [:]) {
                             deployment.run()
                         }
                     } else {
