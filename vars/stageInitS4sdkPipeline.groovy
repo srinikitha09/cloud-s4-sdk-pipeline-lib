@@ -1,5 +1,3 @@
-import org.codehaus.groovy.runtime.dgmimpl.arrays.BooleanArrayGetAtMetaMethod
-
 def call(Map parameters) {
     def stageName = 'initS4sdkPipeline'
     def script = parameters.script

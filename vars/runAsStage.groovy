@@ -21,7 +21,6 @@ def call(Map parameters = [:], body) {
     Map stageDefaultConfiguration = ConfigurationLoader.defaultStageConfiguration(script, stageName)
     Map stageConfiguration = ConfigurationLoader.stageConfiguration(script, stageName)
 
-
     Set parameterKeys = ['node']
     Map mergedStageConfiguration = ConfigurationMerger.merge(
         parameters,

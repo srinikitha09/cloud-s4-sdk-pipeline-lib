@@ -38,7 +38,7 @@ def call(Map parameters = [:]) {
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: deploymentDescriptor.getConfigProperty('credentialsId'), passwordVariable: 'NEO_PASSWORD', usernameVariable: 'NEO_USERNAME']]) {
                 assertPasswordRules(NEO_PASSWORD)
                 commandHelper = new NeoDeployCommandHelper(deploymentDescriptors, NEO_USERNAME, BashUtils.escape(NEO_PASSWORD), source)
-                deploy(script,dockerImage, configuration.deploymentType, commandHelper)
+                deploy(script, dockerImage, configuration.deploymentType, commandHelper)
             }
         } else {
             throw new Exception("ERROR - SPECIFY credentialsId")
