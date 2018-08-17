@@ -50,7 +50,7 @@ def call(Map parameters = [:]) {
                         }
                         throw e
                     } finally {
-                        archiveArtifacts includes: "${s4SdkGlobals.endToEndReports}/**"
+                        archiveArtifacts artifacts: "${s4SdkGlobals.endToEndReports}/**", allowEmptyArchive: true
                         step($class: 'CucumberTestResultArchiver', testResults: "${s4SdkGlobals.endToEndReports}/*.json")
                         stashFiles script: script, stage: parameters.stage
                     }
