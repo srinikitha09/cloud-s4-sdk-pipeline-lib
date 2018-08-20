@@ -17,9 +17,7 @@ def call(Map parameters) {
 
         initS4SdkPipelineLibrary script: script
         initStashConfiguration script: script
-        if (Boolean.valueOf(env.ON_K8S)) {
-            initContainersMap script: script
-        }
+
 
         def mavenLocalRepository = new File(script.s4SdkGlobals.m2Directory)
         def reportsDirectory = new File(script.s4SdkGlobals.reportsDirectory)
@@ -53,6 +51,10 @@ def call(Map parameters) {
         generalConfiguration.gitCommitId = getGitCommitId()
 
         String prefix = generalConfiguration.projectName
+
+        if (Boolean.valueOf(env.ON_K8S)) {
+            initContainersMap script: script
+        }
 
         script.commonPipelineEnvironment.configuration.currentBuildResultLock = "${prefix}/currentBuildResult"
         script.commonPipelineEnvironment.configuration.performanceTestLock = "${prefix}/performanceTest"
