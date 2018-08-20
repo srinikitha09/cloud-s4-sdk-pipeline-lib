@@ -1,7 +1,7 @@
 import com.sap.piper.ConfigurationHelper
 import com.sap.piper.ConfigurationLoader
 import com.sap.piper.ConfigurationMerger
-import com.sap.piper.ContainerMap
+import com.sap.piper.k8s.ContainerMap
 
 import java.util.UUID
 

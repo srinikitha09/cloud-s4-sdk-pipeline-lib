@@ -1,7 +1,7 @@
 import com.sap.cloud.sdk.s4hana.pipeline.DownloadCacheUtils
 import com.sap.cloud.sdk.s4hana.pipeline.E2ETestCommandHelper
 import com.sap.cloud.sdk.s4hana.pipeline.EndToEndTestType
-import com.sap.piper.ContainerMap
+import com.sap.piper.k8s.ContainerMap
 
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'executeEndToEndTest', stepParameters: parameters) {

@@ -1,7 +1,7 @@
 import com.cloudbees.groovy.cps.NonCPS
 import com.sap.piper.ConfigurationLoader
 import com.sap.piper.ConfigurationMerger
-import com.sap.piper.ContainerMap
+import com.sap.piper.k8s.ContainerMap
 
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'initContainersMap', stepParameters: parameters) {

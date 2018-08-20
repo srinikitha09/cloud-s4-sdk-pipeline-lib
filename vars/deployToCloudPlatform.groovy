@@ -1,6 +1,6 @@
 import com.sap.cloud.sdk.s4hana.pipeline.CloudPlatform
 import com.sap.cloud.sdk.s4hana.pipeline.DeploymentType
-import com.sap.piper.ContainerMap
+import com.sap.piper.k8s.ContainerMap
 
 def call(Map parameters = [:]) {
     handleStepErrors(stepName: 'deployToCloudPlatform', stepParameters: parameters) {
