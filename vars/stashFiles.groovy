@@ -21,8 +21,6 @@ def call(Map parameters = [:]) {
                 steps.stash name: name, includes: include, exclude: exclude, allowEmpty: true
             }
         }
-//        if (!env.POD_NAME) {
-//            deleteDir()
-//        }
+            deleteDir()
     }
 }
