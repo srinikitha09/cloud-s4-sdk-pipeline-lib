@@ -1,6 +1,10 @@
 import com.cloudbees.groovy.cps.NonCPS
 
+import static com.sap.cloud.sdk.s4hana.pipeline.EnvironmentAssertionUtils.assertPluginIsActive
+
 @NonCPS
 def call(url) {
-    return new URL(url).getText()
+    assertPluginIsActive('http_request')
+    def response = httpRequest url
+    return response.content
 }
