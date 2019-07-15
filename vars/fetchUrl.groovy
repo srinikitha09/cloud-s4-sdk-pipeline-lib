@@ -1,12 +1,8 @@
-import static com.sap.cloud.sdk.s4hana.pipeline.EnvironmentAssertionUtils.assertPluginIsActive
+import com.cloudbees.groovy.cps.NonCPS
 
-def call(String url) {
-    assertPluginIsActive('http_request')
-    String proxy = null
-    if (Jenkins.instance.proxy) {
-        proxy = "${Jenkins.instance.proxy.name}:${Jenkins.instance.proxy.port}"
-    }
-    echo "DEBUG $proxy"
-    def response = httpRequest(url: url, httpProxy: proxy)
-    return response.content.toString()
+@NonCPS
+def call(url) {
+    System.setProperty("http.proxyHost", Jenkins.instance.proxy.name);
+    System.setProperty("http.proxyPort", Jenkins.instance.proxy.port);
+    return new URL(url).getText()
 }
