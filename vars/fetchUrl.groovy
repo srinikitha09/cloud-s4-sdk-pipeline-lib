@@ -8,5 +8,5 @@ def call(String url) {
     }
     echo "DEBUG $proxy"
     def response = httpRequest(url: url, httpProxy: proxy)
-    return response.content
+    return response.content.toString()
 }
