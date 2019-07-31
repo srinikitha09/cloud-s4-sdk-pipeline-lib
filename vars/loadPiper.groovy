@@ -6,7 +6,7 @@ def call(Map parameters = [:]) {
     Script script = parameters.script
 
     // If you change the version please also update build.gradle and the corresponding jar file
-    String piperOsVersion = '3d94ce4770747a75c40c6e176ec79bcc23ad5d95'
+    String piperOsVersion = 'edc396c0cbc4c484a92b93850e773776f9ef50f1'
 
     String piperIdentifier = 'None'
 
