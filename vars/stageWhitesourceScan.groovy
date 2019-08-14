@@ -22,6 +22,7 @@ def call(Map parameters = [:]) {
                 executeForMaven(script, basePath, whitesourceConfiguration)
             }
         }
+        sleep 300
         runOverNpmModules(script: script) { basePath ->
             executeForNpm(script, basePath, whitesourceConfiguration)
         }
