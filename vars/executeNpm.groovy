@@ -21,7 +21,7 @@ def call(Map parameters = [:], body) {
 
         dockerExecute(script: script, dockerImage: configuration.dockerImage, dockerOptions: configuration.dockerOptions) {
             try {
-                if (configuration.defaultNpmRegistry) {
+                if (env.defaultNpmRegistry) {
                     sh "npm config set registry ${env.defaultNpmRegistry}"
                 }
                 body()
