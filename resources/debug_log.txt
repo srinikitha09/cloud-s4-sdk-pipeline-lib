@@ -84,7 +84,7 @@ Environment Variable | Value
 
 Configuration file for global extensions: <% print globalExtensionConfigurationFilePath ?: "Global extensions don't have a configuration file" %>
 
-Shared config: <% print shareConfidentialInformation ? sharedConfigFilePath ? "sharedConfigFilePath" : "sharedConfigFilePath != null" %>
+Shared config: <% print shareConfidentialInformation ? sharedConfigFilePath ?: "none" : "sharedConfigFilePath != null" %>
 
 <% print shareConfidentialInformation ? "## Shared Libraries" : "" %>
 
