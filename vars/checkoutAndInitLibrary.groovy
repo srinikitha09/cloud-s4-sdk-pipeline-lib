@@ -36,8 +36,7 @@ def call(Map parameters) {
 
     if (script.commonPipelineEnvironment.configuration.general.sharedConfiguration) {
         def response = httpRequest script.commonPipelineEnvironment.configuration.general.sharedConfiguration
-        def sharedConfig = readYaml file: response.content
-        script.commonPipelineEnvironment.configuration = MapUtils.merge(script.commonPipelineEnvironment.configuration, sharedConfig)
+        script.commonPipelineEnvironment.configuration = MapUtils.merge(script.commonPipelineEnvironment.configuration, response.content)
         Debuglogger.instance.sharedConfigFilePath = script.commonPipelineEnvironment.configuration.general.sharedConfiguration
     }
 
