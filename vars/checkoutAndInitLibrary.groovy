@@ -32,6 +32,8 @@ def call(Map parameters) {
 
     Analytics.instance.initAnalytics(script)
 
+    loadGlobalExtension script: script
+
     if (script.commonPipelineEnvironment.configuration.general.sharedConfiguration) {
         def response = httpRequest script.commonPipelineEnvironment.configuration.general.sharedConfiguration
         def sharedConfig = readYaml text: response.content
@@ -40,7 +42,6 @@ def call(Map parameters) {
     }
     println(script.commonPipelineEnvironment.configuration)
 
-    loadGlobalExtension script: script
     convertLegacyExtensions(script: script)
 
     if (Boolean.valueOf(env.ON_K8S)) {
