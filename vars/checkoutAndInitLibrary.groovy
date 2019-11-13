@@ -4,6 +4,7 @@ import com.sap.cloud.sdk.s4hana.pipeline.BuildToolEnvironment
 import com.sap.cloud.sdk.s4hana.pipeline.ReportAggregator
 import com.sap.cloud.sdk.s4hana.pipeline.Debuglogger
 import com.sap.cloud.sdk.s4hana.pipeline.EnvironmentUtils
+import com.sap.piper.MapUtils
 
 def call(Map parameters) {
     def script = parameters.script
@@ -32,6 +33,14 @@ def call(Map parameters) {
     Analytics.instance.initAnalytics(script)
 
     loadGlobalExtension script: script
+
+    if (script.commonPipelineEnvironment.configuration.general.sharedConfiguration) {
+        def response = httpRequest script.commonPipelineEnvironment.configuration.general.sharedConfiguration
+        def sharedConfig = readYaml file: response.content
+        script.commonPipelineEnvironment.configuration = MapUtils.merge(script.commonPipelineEnvironment.configuration, sharedConfig)
+        Debuglogger.instance.sharedConfigFilePath = script.commonPipelineEnvironment.configuration.general.sharedConfiguration
+    }
+
     convertLegacyExtensions(script: script)
 
     if (Boolean.valueOf(env.ON_K8S)) {
