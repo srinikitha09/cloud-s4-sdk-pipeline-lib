@@ -16,6 +16,7 @@ def call(Map parameters = [:]) {
 
             String extensionConfigurationFilePath = "${s4SdkGlobals.repositoryExtensionsDirectory}/extension_configuration.yml"
             if (fileExists(extensionConfigurationFilePath)) {
+                Debuglogger.instance.globalExtensionConfigurationFilePath = extensionConfigurationFilePath
                 Map currentConfiguration = script.commonPipelineEnvironment.configuration
                 Map extensionConfiguration = readYaml file: extensionConfigurationFilePath
                 Map mergedConfiguration = MapUtils.merge(extensionConfiguration, currentConfiguration)

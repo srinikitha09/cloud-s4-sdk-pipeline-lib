@@ -82,6 +82,8 @@ Environment Variable | Value
 <% print globalExtensions ? "-----------------|-------" : "" %>
 <% print globalExtensions.collect({each -> "${each.key} | ${each.value}"}).join("\n") %>
 
+Configuration file for global extensions: <% print globalExtensionConfigurationFilePath ?: "Global extensions don't have a configuration file" %>
+
 <% print shareConfidentialInformation ? "## Shared Libraries" : "" %>
 
 <% print shareConfidentialInformation ? additionalSharedLibraries ? "" : "No additional shared libraries were loaded." : "" %>
