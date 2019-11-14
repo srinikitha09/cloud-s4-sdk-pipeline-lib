@@ -19,6 +19,7 @@ def call(Map parameters = [:]) {
                 Debuglogger.instance.globalExtensionConfigurationFilePath = extensionConfigurationFilePath
                 Map currentConfiguration = script.commonPipelineEnvironment.configuration
                 Map extensionConfiguration = readYaml file: extensionConfigurationFilePath
+                // The second parameter takes precedence, so extension config can be overridden by the project config
                 Map mergedConfiguration = MapUtils.merge(extensionConfiguration, currentConfiguration)
                 script.commonPipelineEnvironment.configuration = mergedConfiguration
             }

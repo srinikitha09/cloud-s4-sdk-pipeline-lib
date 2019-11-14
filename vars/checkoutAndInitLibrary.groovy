@@ -41,7 +41,6 @@ def call(Map parameters) {
         script.commonPipelineEnvironment.configuration = MapUtils.merge(sharedConfig, script.commonPipelineEnvironment.configuration)
         Debuglogger.instance.sharedConfigFilePath = script.commonPipelineEnvironment.configuration.general.sharedConfiguration
     }
-    println(script.commonPipelineEnvironment.configuration)
 
     convertLegacyExtensions(script: script)
 
