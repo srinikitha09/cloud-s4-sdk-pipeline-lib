@@ -35,7 +35,7 @@ def call(Map parameters) {
     loadGlobalExtension script: script
 
     if (script.commonPipelineEnvironment.configuration.general.sharedConfiguration) {
-        String response = httpRequest script.commonPipelineEnvironment.configuration.general.sharedConfiguration
+        def response = httpRequest script.commonPipelineEnvironment.configuration.general.sharedConfiguration
         Map sharedConfig = readYaml text: response.content
         // The second parameter takes precedence, so shared config can be overridden by the project config
         script.commonPipelineEnvironment.configuration = MapUtils.merge(sharedConfig, script.commonPipelineEnvironment.configuration)
