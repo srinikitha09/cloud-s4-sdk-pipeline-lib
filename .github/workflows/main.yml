@@ -9,9 +9,9 @@ jobs:
       run: |
         sudo apt-get remove docker docker-engine docker.io containerd runc -y
         sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-        wget https://download.docker.com/linux/static/stable/x86_64/docker-19.03.5.tgz
+        wget -q https://download.docker.com/linux/static/stable/x86_64/docker-19.03.5.tgz
         tar xzvf docker-19.03.5.tgz
-        sudo cp docker/* /usr/bin/
+        sudo cp -f docker/* /usr/bin/
         sudo dockerd &
         docker -v
         curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
