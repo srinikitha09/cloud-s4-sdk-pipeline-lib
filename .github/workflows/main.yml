@@ -2,20 +2,14 @@ on: push
 name: Test
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Test
+    - name: Setup Minikube
+      id: minikube
+      uses: CodingNagger/minikube-setup-action@v1.0.2
+    - name: Launch Minikube
+      run: eval ${{ steps.minikube.outputs.launcher }}
+    - name: Check pods
       run: |
-        sudo apt-get remove docker docker-engine docker.io containerd runc -y
-        sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-        wget -q https://download.docker.com/linux/static/stable/x86_64/docker-19.03.5.tgz
-        tar xzvf docker-19.03.5.tgz
-        sudo cp -f docker/* /usr/bin/
-        sudo dockerd &
-        docker -v
-        curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
-        curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
-        sudo minikube start --vm-driver=none --kubernetes-version=v1.16.0
-        minikube update-context
-        JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}';    until kubectl get nodes -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1; done
+        kubectl get pods
