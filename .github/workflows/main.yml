@@ -14,9 +14,15 @@ jobs:
         with:
           minikube version: 'v1.5.2'
           kubernetes version: 'v1.16.2'
+      - uses: azure/setup-helm@v1
+        id: install
       - name: Interact with the cluster
         run: |
           kubectl get nodes
           kubectl get pods
           kubectl cluster-info
           kubectl get pods -n kube-system
+          helm init --service-account tiller
+          helm --help
+          kubectl --namespace kube-system get pods | grep tiller
+
