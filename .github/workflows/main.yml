@@ -1,17 +1,22 @@
-on: push
-name: Test
+name: Example workflow
+
+on: [push]
+
 jobs:
-  build:
+  example:
+    name: Example Minikube-Kubernetes Cluster interaction
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Setup Minikube
-      id: minikube
-      uses: CodingNagger/minikube-setup-action@v1.0.2
-    - name: Launch Minikube
-      run: eval ${{ steps.minikube.outputs.launcher }}
-    - name: Check pods
-      run: |
-        kubectl get pods
-        kubectl cluster-info
-        kubectl get pods -n kube-system
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup Minikube
+        uses: manusa/actions-setup-minikube@v1.0.0
+        with:
+          minikube version: 'v1.5.2'
+          kubernetes version: 'v1.16.2'
+      - name: Interact with the cluster
+        run: |
+          kubectl get nodes
+          kubectl get pods
+          kubectl cluster-info
+          kubectl get pods -n kube-system
