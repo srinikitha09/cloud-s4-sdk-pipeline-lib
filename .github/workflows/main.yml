@@ -22,7 +22,6 @@ jobs:
           kubectl get pods
           kubectl cluster-info
           kubectl get pods -n kube-system
-          helm init || true
-          helm --help
-          kubectl --namespace kube-system get pods | grep tiller
-
+          helm init
+          helm install --name my-release stable/jenkins
+          kubectl --namespace kube-system get pods
