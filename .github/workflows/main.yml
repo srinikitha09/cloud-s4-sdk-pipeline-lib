@@ -11,7 +11,7 @@ jobs:
         k8s-version: 1.15.1
     - name: Testing
       run: |
-        sudo minikube start --vm-driver=none --kubernetes-version=v1.15.1
+        minikube start --vm-driver=kvm2 --kubernetes-version=v1.15.1
         minikube update-context
         kubectl cluster-info
         kubectl get pods -n kube-system
