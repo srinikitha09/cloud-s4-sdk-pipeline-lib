@@ -23,5 +23,6 @@ jobs:
           kubectl cluster-info
           kubectl get pods -n kube-system
           helm init
+          helm repo update
           helm install --generate-name stable/jenkins
           kubectl --namespace kube-system get pods
