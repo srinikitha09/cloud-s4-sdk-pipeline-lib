@@ -22,7 +22,7 @@ jobs:
           kubectl get pods
           kubectl cluster-info
           kubectl get pods -n kube-system
-          helm init --service-account tiller
+          helm init || true
           helm --help
           kubectl --namespace kube-system get pods | grep tiller
 
