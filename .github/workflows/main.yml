@@ -1,17 +1,17 @@
 on: push
 name: Test
 jobs:
-  minikube-test:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: opsgang/ga-setup-minikube@v0.1.1
-      with:
-        minikube-version: 1.4.0
-        k8s-version: 1.15.1
-    - name: Testing
+    - name: Setup Minikube
+      id: minikube
+      uses: CodingNagger/minikube-setup-action@v1.0.2
+    - name: Launch Minikube
+      run: eval ${{ steps.minikube.outputs.launcher }}
+    - name: Check pods
       run: |
-        minikube start --vm-driver=kvm2 --kubernetes-version=v1.15.1
-        minikube update-context
+        kubectl get pods
         kubectl cluster-info
         kubectl get pods -n kube-system
