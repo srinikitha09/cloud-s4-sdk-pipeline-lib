@@ -1,11 +1,10 @@
-name: Example workflow
+name: Test on Kubernetes
 
 on: [push]
 
 jobs:
-  example:
-    name: Example Minikube-Kubernetes Cluster interaction
-    runs-on: ubuntu-latest
+  test-on-k8s:
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -16,14 +15,12 @@ jobs:
           kubernetes version: 'v1.16.2'
       - uses: azure/setup-helm@v1
         id: install
-      - name: Interact with the cluster
+      - name: Setup Project Piper Jenkins master
         run: |
-          kubectl get nodes
-          kubectl get pods
-          kubectl cluster-info
-          kubectl get pods -n kube-system
           helm init
           helm repo add stable https://kubernetes-charts.storage.googleapis.com/
           helm repo update
           helm install --generate-name stable/jenkins -f values.yaml
-          kubectl --namespace kube-system get pods
+      - name: Run test pipeline
+        run: |
+          docker run -v //var/run/docker.sock:/var/run/docker.sock -v $(pwd):/workspace -e CASC_JENKINS_CONFIG=/workspace/jenkins.yml -e HOST=$(hostname) ppiper/jenkinsfile-runner

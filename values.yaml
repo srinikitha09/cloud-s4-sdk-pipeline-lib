@@ -42,6 +42,17 @@ master:
                   scm:
                     git:
                       remote: "https://github.com/SAP/jenkins-library.git"
+        jobs:
+          - script: >
+              multibranchPipelineJob('validation-job') {
+                  branchSources {
+                      git {
+                          id('validation-job')
+                          remote("https://github.com/piper-validation/cloud-s4-sdk-book")
+                          includes('sdk-lib-test-mta')
+                      }
+                  }
+              }
 
   # List of plugins to be install during Jenkins master start
   installPlugins:
