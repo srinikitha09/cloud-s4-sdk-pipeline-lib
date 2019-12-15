@@ -6,7 +6,7 @@
 # name: value
 
 Master:
-  Name: jenkins-master
+  componentName: jenkins-master
   Image: "ppiper/jenkins-master"
   ImageTag: "latest"
   ImagePullPolicy: "Always"
