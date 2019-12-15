@@ -25,5 +25,5 @@ jobs:
           helm init
           helm repo add stable https://kubernetes-charts.storage.googleapis.com/
           helm repo update
-          helm install --generate-name stable/jenkins --set master.image=ppiper/jenkins-master
+          helm install --generate-name stable/jenkins -f values.yaml
           kubectl --namespace kube-system get pods
