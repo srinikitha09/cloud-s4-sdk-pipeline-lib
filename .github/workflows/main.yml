@@ -21,7 +21,7 @@ jobs:
           helm repo add stable https://kubernetes-charts.storage.googleapis.com/
           helm repo update
           helm install --generate-name stable/jenkins -f values.yaml
-          export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/component=jenkins-master" -l "app.kubernetes.io/instance=jenkins-1576436790" -o jsonpath="{.items[0].metadata.name}")
+          export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/component=jenkins-master" -l "app.kubernetes.io/instance=jenkins-*" -o jsonpath="{.items[0].metadata.name}")
           kubectl --namespace default port-forward $POD_NAME 8080:8080
           export HOST=${POD_NAME}:8080
           docker run -v //var/run/docker.sock:/var/run/docker.sock -v $(pwd):/workspace -e CASC_JENKINS_CONFIG=/workspace/jenkins.yml -e HOST ppiper/jenkinsfile-runner
