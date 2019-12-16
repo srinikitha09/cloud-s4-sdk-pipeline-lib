@@ -24,5 +24,5 @@ jobs:
           export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/component=jenkins-master" -o jsonpath="{.items[0].metadata.name}")
           sleep 200
           kubectl --namespace default port-forward $POD_NAME 8080:8080
-          export HOST=${POD_NAME}:8080
-          docker run -v //var/run/docker.sock:/var/run/docker.sock -v $(pwd):/workspace -e CASC_JENKINS_CONFIG=/workspace/jenkins.yml -e HOST ppiper/jenkinsfile-runner
+          #export HOST=${POD_NAME}:8080
+          docker run -v //var/run/docker.sock:/var/run/docker.sock -v $(pwd):/workspace -e CASC_JENKINS_CONFIG=/workspace/jenkins.yml -e HOST=http://127.0.0.1:8080 ppiper/jenkinsfile-runner
