@@ -49,7 +49,7 @@ master:
                       git {
                           id('validation-job')
                           remote("https://github.com/piper-validation/cloud-s4-sdk-book")
-                          includes('sdk-lib-test-mta')
+                          includes('sdk-lib-test-mta-k8s')
                       }
                   }
               }
