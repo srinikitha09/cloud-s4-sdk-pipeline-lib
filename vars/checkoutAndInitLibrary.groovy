@@ -34,7 +34,7 @@ def call(Map parameters) {
 
     loadGlobalExtension script: script
 
-    if (script.commonPipelineEnvironment.configuration.general.sharedConfiguration) {
+    if (script.commonPipelineEnvironment.configuration.general?.sharedConfiguration) {
         def response = httpRequest(
             url: script.commonPipelineEnvironment.configuration.general.sharedConfiguration,
             validResponseCodes: '100:399,404' // Allow a more specific error message for 404 case
