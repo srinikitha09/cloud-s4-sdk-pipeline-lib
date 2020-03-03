@@ -41,13 +41,27 @@ def call(Map parameters = [:]) {
                 sh 'npm install'
 
                 boolean es6Enabled = configuration?.ui5BestPractices?.enableES6
+                boolean es2017Enabled = configuration?.ui5BestPractices?.enableES2017
+                boolean es2020Enabled = configuration?.ui5BestPractices?.enableES2020
+
+                String highestConfiguredLanguageLevel = null
                 if (es6Enabled) {
+                    highestConfiguredLanguageLevel = 'es6'
+                }
+                if (es2017Enabled) {
+                    highestConfiguredLanguageLevel = 'es2017'
+                }
+                if (es2020Enabled) {
+                    highestConfiguredLanguageLevel = 'es2020'
+                }
+
+                if (highestConfiguredLanguageLevel) {
                     Map basicDefaultConfig = readJSON file: 'node_modules/@sap/di.code-validation.js/src/defaultConfig/basicDefaultConfig/.eslintrc.json'
-                    basicDefaultConfig['env'].es6 = true
+                    basicDefaultConfig['env'][highestConfiguredLanguageLevel] = true
                     writeJSON file: 'node_modules/@sap/di.code-validation.js/src/defaultConfig/basicDefaultConfig/.eslintrc.json', json: basicDefaultConfig
 
                     Map fioriCustomRules = readJSON file: 'node_modules/@sap/di.code-validation.js/src/defaultConfig/fioriCustomRules/.eslintrc.json'
-                    fioriCustomRules['env'].es6 = true
+                    fioriCustomRules['env'][highestConfiguredLanguageLevel] = true
                     writeJSON file: 'node_modules/@sap/di.code-validation.js/src/defaultConfig/fioriCustomRules/.eslintrc.json', json: fioriCustomRules
                 }
 
